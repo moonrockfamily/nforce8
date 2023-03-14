@@ -1,7 +1,7 @@
 {
   "name": "nforce8-fix",
   "description": "Forked from nforce by Kevin O'Hara <kevnohara80@gmail.com> (http://kevinmohara.com) for use in NodeRED",
-  "version": "2.0.13",
+  "version": "2.1.0",
   "author": "Todd Hiles <2ToddHiles@gmail.com>",
   "contributors": [
     {
@@ -47,7 +47,6 @@
     "run-sequence": "^2.2.1",
     "should": "13.2.3"
   },
-  "optionalDependencies": {},
   "engines": {
     "node": ">8.0"
   },

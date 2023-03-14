@@ -1,6 +1,7 @@
 'use strict';
 
 const fetch = require('node-fetch');
+const https = require('node:https');
 const qs = require('querystring');
 const _ = require('lodash');
 const Record = require('./lib/record');
@@ -25,6 +26,8 @@ const plugins = {};
 const Connection = function(opts) {
   var self = this;
 
+  self.agent = new https.Agent(opts.agentOptions||{"keepAlive": true});
+  
   opts = _.defaults(opts || {}, CONST.defaultOptions);
 
   // convert option values
@@ -77,6 +80,9 @@ const Connection = function(opts) {
 /*****************************
  * auth getters/setters
  *****************************/
+Connection.prototype.getAgent = function() {
+  return  this.agent;
+};
 
 Connection.prototype.getOAuth = function() {
   return this.oauth;
@@ -145,6 +151,7 @@ Connection.prototype._getOpts = function(d, c, opts) {
   if (opts.defaults && _.isObject(opts.defaults)) {
     data = _.defaults(data, opts.defaults);
   }
+  data.agent = this.agent;
   return data;
 };
 
