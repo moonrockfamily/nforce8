@@ -26,7 +26,7 @@ const plugins = {};
 const Connection = function(opts) {
   var self = this;
 
-  self.agent = new https.Agent(opts.agentOptions||{"keepAlive": true});
+  self.agent = new https.Agent(opts.agentOptions||{"keepAlive": true, "timeout": 10000});
   
   opts = _.defaults(opts || {}, CONST.defaultOptions);
 
