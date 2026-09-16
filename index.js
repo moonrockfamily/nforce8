@@ -872,19 +872,23 @@ Connection.prototype._apiAuthRequest = function(opts) {
         .then((res) => {
           if (!res) {
             reject(errors.emptyResponse());
+            return null;
           } else if (!res.ok) {
             const err = new Error('Fetch failed:' + res.statusText);
             err.statusCode = res.status;
             reject(err);
+            return null;
           }
           return res;
         })
-        .then((res) => res.json())
+        .then((res) => (res ? res.json() : null))
         .then((jBody) => {
-          if (jBody.access_token && self.mode === 'single') {
+          if (jBody && jBody.access_token && self.mode === 'single') {
             self.oauth = jBody;
           }
-          resolve(jBody);
+          if (jBody) {
+            resolve(jBody);
+          }
         })
         .catch((err) => reject(err));
     } catch (e) {
@@ -967,7 +971,7 @@ function addSObjectAndId(body, sobject) {
   return body;
 }
 
-function unsucessfullResponseCheck(res, self, opts) {
+async function unsucessfullResponseCheck(res, self, opts) {
   // Only interested when stuff went wrong
   if (res.ok) {
     return res;
@@ -975,7 +979,7 @@ function unsucessfullResponseCheck(res, self, opts) {
 
   const e = new Error();
   e.statusCode = res.status;
-  const body = util.isJsonResponse(res) ? res.json() : res.txt();
+  const body = util.isJsonResponse(res) ? await res.json() : await res.text();
 
   // Salesforce sends internal errors as Array
   if (_.isArray(body) && body.length > 0) {

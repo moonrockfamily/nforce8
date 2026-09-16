@@ -58,7 +58,10 @@
     "test": "nyc --reporter=text --reporter=html --reporter=text-lcov --reporter=lcovonly ./node_modules/mocha/bin/mocha ./test --reporter spec",
     "postversion": "git push && git push --tags",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
-    "codacy": "cat ./coverage/lcov.info | codacy-coverage"
+    "codacy": "cat ./coverage/lcov.info | codacy-coverage",
+    "prepublishOnly": "npm test",
+    "login": "npm login --registry https://registry.npmjs.com --auth-type=web",
+    "publish:release": "npm publish --access public"
   },
   "nyc": {
     "exclude": [
