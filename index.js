@@ -1,6 +1,7 @@
 'use strict';
 
 const fetch = require('node-fetch');
+const http = require('node:http');
 const https = require('node:https');
 const qs = require('querystring');
 const _ = require('lodash');
@@ -26,7 +27,11 @@ const plugins = {};
 const Connection = function(opts) {
   var self = this;
 
-  self.agent = new https.Agent(opts.agentOptions||{"keepAlive": true, "timeout": 10000});
+  const agentOptions = opts.agentOptions || { keepAlive: true, timeout: 10000 };
+  const httpAgent = new http.Agent(agentOptions);
+  const httpsAgent = new https.Agent(agentOptions);
+  // pick the agent matching the request's protocol, since a single https.Agent can't be used for http: urls
+  self.agent = (parsedUrl) => (parsedUrl.protocol === 'http:' ? httpAgent : httpsAgent);
   
   opts = _.defaults(opts || {}, CONST.defaultOptions);
 
